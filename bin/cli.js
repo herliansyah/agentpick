@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 import { spawn } from 'node:child_process';
-import * as p from '@clack/prompts';
 import pc from 'picocolors';
 import { detectAgents, CONFIG_PATH } from '../lib/detect.js';
 import { REGISTRY } from '../lib/registry.js';
 import { showReadmeModal } from '../lib/modal.js';
+import { selectWithSeparators, isCancel } from '../lib/picker.js';
 
 const passthroughArgs = process.argv.slice(2);
 
@@ -27,19 +27,18 @@ async function main() {
 }
 
 async function pick(detected, initialValue) {
-  p.intro('🤖 agentpick');
-  const id = await p.select({
-    message: 'Pick an agent to launch',
+  const id = await selectWithSeparators({
+    message: '🤖 Pick an agent to launch',
     initialValue,
     options: [
       ...detected.map((agent) => ({ value: agent.id, label: agent.label })),
-      { value: '__sep__', label: pc.dim('──────────'), disabled: true },
+      { value: '__sep__', label: '──────────', separator: true, disabled: true },
       { value: '__readme__', label: '📖 About / README' },
       { value: '__cancel__', label: 'Cancel' },
     ],
   });
-  if (p.isCancel(id) || id === '__cancel__') {
-    p.cancel('Cancelled.');
+  if (isCancel(id) || id === '__cancel__') {
+    console.log(pc.dim('Cancelled.'));
     return null;
   }
   if (id === '__readme__') {
