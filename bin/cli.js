@@ -27,6 +27,7 @@ async function main() {
 }
 
 async function pick(detected, initialValue) {
+  console.clear();
   const id = await selectWithSeparators({
     message: '🤖 Pick an agent to launch',
     initialValue,
