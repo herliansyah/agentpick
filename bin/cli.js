@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import { spawn } from 'node:child_process';
+import { readFileSync } from 'node:fs';
 import * as p from '@clack/prompts';
 import { detectAgents, CONFIG_PATH } from '../lib/detect.js';
 import { REGISTRY } from '../lib/registry.js';
@@ -25,11 +26,12 @@ async function main() {
 }
 
 async function pick(detected) {
-  p.intro('agentpick');
+  p.intro('🤖 agentpick');
   const id = await p.select({
     message: 'Pick an agent to launch',
     options: [
       ...detected.map((agent) => ({ value: agent.id, label: agent.label })),
+      { value: '__readme__', label: '📖 About / README' },
       { value: '__cancel__', label: 'Cancel' },
     ],
   });
@@ -37,7 +39,16 @@ async function pick(detected) {
     p.cancel('Cancelled.');
     return null;
   }
+  if (id === '__readme__') {
+    showReadme();
+    return pick(detected);
+  }
   return detected.find((agent) => agent.id === id);
+}
+
+function showReadme() {
+  const text = readFileSync(new URL('../README.md', import.meta.url), 'utf8').trim();
+  p.note(text, '📖 agentpick — README');
 }
 
 function run(agent) {
