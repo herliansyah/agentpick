@@ -33,7 +33,7 @@ async function pick(detected, initialValue) {
     initialValue,
     options: [
       ...detected.map((agent) => ({ value: agent.id, label: agent.label })),
-      { value: '__sep__', label: pc.dim('──────────') },
+      { value: '__sep__', label: pc.dim('──────────'), disabled: true },
       { value: '__readme__', label: '📖 About / README' },
       { value: '__cancel__', label: 'Cancel' },
     ],
@@ -41,9 +41,6 @@ async function pick(detected, initialValue) {
   if (p.isCancel(id) || id === '__cancel__') {
     p.cancel('Cancelled.');
     return null;
-  }
-  if (id === '__sep__') {
-    return pick(detected, initialValue); // separator, not a real choice
   }
   if (id === '__readme__') {
     await showReadmeModal();
