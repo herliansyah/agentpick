@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 import { spawn } from 'node:child_process';
-import { readFileSync } from 'node:fs';
 import * as p from '@clack/prompts';
 import { detectAgents, CONFIG_PATH } from '../lib/detect.js';
 import { REGISTRY } from '../lib/registry.js';
+import { showReadmeModal } from '../lib/modal.js';
 
 const passthroughArgs = process.argv.slice(2);
 
@@ -40,15 +40,10 @@ async function pick(detected) {
     return null;
   }
   if (id === '__readme__') {
-    showReadme();
+    await showReadmeModal();
     return pick(detected);
   }
   return detected.find((agent) => agent.id === id);
-}
-
-function showReadme() {
-  const text = readFileSync(new URL('../README.md', import.meta.url), 'utf8').trim();
-  p.note(text, '📖 agentpick — README');
 }
 
 function run(agent) {
