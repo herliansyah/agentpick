@@ -25,10 +25,11 @@ async function main() {
   run(chosen);
 }
 
-async function pick(detected) {
+async function pick(detected, initialValue) {
   p.intro('🤖 agentpick');
   const id = await p.select({
     message: 'Pick an agent to launch',
+    initialValue,
     options: [
       ...detected.map((agent) => ({ value: agent.id, label: agent.label })),
       { value: '__readme__', label: '📖 About / README' },
@@ -41,7 +42,7 @@ async function pick(detected) {
   }
   if (id === '__readme__') {
     await showReadmeModal();
-    return pick(detected);
+    return pick(detected, '__readme__'); // stay on README after going back
   }
   return detected.find((agent) => agent.id === id);
 }
