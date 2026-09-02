@@ -1,9 +1,8 @@
 #!/usr/bin/env node
 import { spawn } from 'node:child_process';
-import pc from 'picocolors';
 import { detectAgents, CONFIG_PATH } from '../lib/detect.js';
 import { REGISTRY } from '../lib/registry.js';
-import { showReadmeModal } from '../lib/modal.js';
+import { MENU_ACTIONS } from '../lib/menuActions.js';
 import { selectWithSeparators, isCancel } from '../lib/picker.js';
 
 const passthroughArgs = process.argv.slice(2);
@@ -34,17 +33,16 @@ async function pick(detected, initialValue) {
     options: [
       ...detected.map((agent) => ({ value: agent.id, label: agent.label })),
       { value: '__sep__', label: '──────────', separator: true, disabled: true },
-      { value: '__readme__', label: '📖 About / README' },
-      { value: '__cancel__', label: 'Cancel' },
+      ...MENU_ACTIONS.map((action) => ({ value: action.id, label: action.label })),
     ],
   });
-  if (isCancel(id) || id === '__cancel__') {
-    console.log(pc.dim('Cancelled.'));
-    return null;
-  }
-  if (id === '__readme__') {
-    await showReadmeModal();
-    return pick(detected, '__readme__'); // stay on README after going back
+  if (isCancel(id)) return null;
+
+  const action = MENU_ACTIONS.find((a) => a.id === id);
+  if (action) {
+    const result = await action.run();
+    if (result.type === 'again') return pick(detected, id); // stay on this action after going back
+    return null; // exit
   }
   return detected.find((agent) => agent.id === id);
 }
