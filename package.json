@@ -13,7 +13,16 @@
   "engines": {
     "node": ">=18"
   },
+  "author": "herliansyah <herliansyah@gmail.com>",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/herliansyah/agentpick.git"
+  },
+  "bugs": {
+    "url": "https://github.com/herliansyah/agentpick/issues"
+  },
+  "homepage": "https://github.com/herliansyah/agentpick#readme",
   "dependencies": {
     "@clack/prompts": "^1.7.0",
     "picocolors": "^1.1.1"
