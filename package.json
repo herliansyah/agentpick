@@ -4,7 +4,7 @@
   "description": "Detect installed AI coding-agent CLIs and pick one to launch",
   "type": "module",
   "bin": {
-    "agentpick": "./bin/cli.js"
+    "agentpick": "bin/cli.js"
   },
   "files": [
     "bin",
