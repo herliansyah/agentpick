@@ -5,7 +5,8 @@ Detect installed AI coding-agent CLIs on your machine and pick one to launch.
 ## Usage
 
 ```sh
-npx agentpick
+npx agentpick                          # open interactive picker
+npx agentpick config                   # manage agent profiles (add/delete flags & presets)
 npx agentpick "fix the failing test"   # args are passed through to the chosen agent
 ```
 
@@ -13,14 +14,21 @@ npx agentpick "fix the failing test"   # args are passed through to the chosen a
 - 1 agent detected: launches it immediately without menu prompt
 - 2+ agents detected: interactive terminal picker
 
-## Configuration
+## Agent Profiles & Configuration
 
-Add or override agents in `~/.config/agentpick/config.json`:
+Manage custom launch profiles (e.g. running `agy` with `--dangerously-skip-permissions`) interactively via `npx agentpick config` or by selecting **Manage Profiles** in the picker menu.
+
+Profiles are persisted in `~/.config/agentpick/config.json`:
 
 ```json
 {
   "agents": [
-    { "id": "my-agent", "label": "My Agent", "bin": "my-agent", "args": [] }
+    {
+      "id": "agy-skip",
+      "label": "Antigravity (Skip Permissions)",
+      "bin": "agy",
+      "args": ["--dangerously-skip-permissions"]
+    }
   ]
 }
 ```
@@ -102,14 +110,25 @@ npx agentpick "perbaiki unit test yang gagal"
 - **1 Agent Terdeteksi**: Langsung meluncurkan agent tersebut tanpa menampilkan menu.
 - **2+ Agent Terdeteksi**: Menampilkan menu pemilihan (*interactive picker*) terminal.
 
-### Menambahkan Agent Kustom
+### Kelola Profil & Parameter Agent
 
-Jika agent yang Anda pakai belum ada di daftar bawaan, Anda dapat menambahkannya di `~/.config/agentpick/config.json`:
+Anda dapat menambahkan variasi peluncuran agent (misalnya `agy` normal vs `agy` dengan `--dangerously-skip-permissions` atau multiparameter lain) langsung secara interaktif tanpa perlu mengedit JSON manual:
+
+```sh
+# Buka manajer profil interaktif
+npx agentpick config
+```
+
+Atau pilih opsi **Manage Profiles** di bawah separator menu utama picker. Semua profil tersimpan rapi di `~/.config/agentpick/config.json`.
+
+### Menambahkan Agent Kustom Manual
+
+Jika ingin menambahkan agent kustom secara manual di `~/.config/agentpick/config.json`:
 
 ```json
 {
   "agents": [
-    { "id": "nama-agent", "label": "Nama Agent", "bin": "nama-binary", "args": [] }
+    { "id": "nama-agent", "label": "Nama Agent", "bin": "nama-binary", "args": ["--param1", "--param2"] }
   ]
 }
 ```

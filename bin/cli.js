@@ -5,9 +5,16 @@ import { REGISTRY } from '../lib/registry.js';
 import { MENU_ACTIONS } from '../lib/menuActions.js';
 import { selectWithSeparators, isCancel } from '../lib/picker.js';
 
+import { manageProfilesInteractive } from '../lib/profiles.js';
+
 const passthroughArgs = process.argv.slice(2);
 
 async function main() {
+  if (passthroughArgs[0] === 'config' || passthroughArgs[0] === '--manage' || passthroughArgs[0] === 'profiles') {
+    await manageProfilesInteractive({ detectedAgents: detectAgents() });
+    return;
+  }
+
   const detected = detectAgents();
 
   if (detected.length === 0) {
@@ -40,8 +47,11 @@ async function pick(detected, initialValue) {
 
   const action = MENU_ACTIONS.find((a) => a.id === id);
   if (action) {
-    const result = await action.run();
-    if (result.type === 'again') return pick(detected, id); // stay on this action after going back
+    const result = await action.run({ detectedAgents: detected });
+    if (result.type === 'again') {
+      const refreshed = detectAgents();
+      return pick(refreshed, id);
+    }
     return null; // exit
   }
   return detected.find((agent) => agent.id === id);

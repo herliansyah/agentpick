@@ -10,6 +10,9 @@
     "bin",
     "lib"
   ],
+  "scripts": {
+    "test": "node test/detect.test.js && node test/profiles.test.js"
+  },
   "engines": {
     "node": ">=18"
   },
