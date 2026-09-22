@@ -23,3 +23,8 @@ _Avoid_: Available agent, installed agent
 **User Registry Override**:
 Entries a user adds or overrides in `~/.config/agentpick/config.json`, merged with the bundled Registry.
 _Avoid_: Custom agent, plugin
+
+**Agent Profile**:
+A user-configured launch variation for an Agent, consisting of a custom label and specific CLI arguments stored in `~/.config/agentpick/config.json`.
+_Avoid_: Preset, variant, flavor
+
